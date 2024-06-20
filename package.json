@@ -10,5 +10,14 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@types/express": "^4.17.21"
+  },
+  "dependencies": {
+    "@types/node": "^20.14.6",
+    "express": "^4.19.2",
+    "tsc-watch": "^6.2.0",
+    "typescript": "^5.4.5"
+  }
 }
