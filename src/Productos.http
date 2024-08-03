@@ -1,0 +1,23 @@
+### Obtener todos los Productos
+GET http://localhost:3000/api/productos
+
+### Obtener un Producto por ID
+GET http://localhost:3000/api/productos/1
+
+### Crear un Producto
+POST http://localhost:3000/api/productos
+Content-Type: application/json
+
+{
+    "stock":100,
+    "descProd": "Pila AA"
+}
+
+### Actualizar un Producto
+PUT http://localhost:3000/api/productos/3
+Content-Type: application/json
+
+{
+    "stock": 123,
+    "descProd": "RRRRRRRRRR"
+}

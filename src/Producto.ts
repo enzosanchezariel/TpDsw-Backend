@@ -1,4 +1,3 @@
-import crypto from 'node:crypto'
 export class Producto{
     codProd: number;
     stock: number;
