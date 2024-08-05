@@ -1,0 +1,122 @@
+### Obtener todos los Productos
+GET http://localhost:3000/api/products
+
+### Obtener un Producto por ID
+GET http://localhost:3000/api/products/1
+
+### Obtener un Producto por ID no existente
+GET http://localhost:3000/api/products/999
+
+### Crear un Producto
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+    "stock":100,
+    "name": "Pila AA"
+}
+
+### Crear un producto con atributo faltante
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+    "stock":100,
+}
+
+### Crear un producto con atributo erroneo
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+    "name": "Sardina",
+    "amount":100,
+    "stock":100,
+}
+
+### Crear un producto con atributo erroneo y faltante
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+    "amount":100,
+    "stock":100,
+}
+
+### Actualizar un Producto
+PUT http://localhost:3000/api/products/3
+Content-Type: application/json
+
+{
+    "stock": 123,
+    "name": "RRRRRRRRRR"
+}
+
+### Actualizar un Producto con atributo faltante
+PUT http://localhost:3000/api/products/3
+Content-Type: application/json
+
+{
+    "stock": 123,
+}
+
+### Actualizar un Producto con atributo erroneo
+PUT http://localhost:3000/api/products/3
+Content-Type: application/json
+
+{
+    "name": "Sardina",
+    "amount":100,
+    "stock":100,
+}
+
+### Actualizar un Producto con atributo erroneo y faltante
+PUT http://localhost:3000/api/products/3
+Content-Type: application/json
+
+{
+    "amount":100,
+    "stock":100,
+}
+
+### Actualizar un Producto (PATCH)
+PATCH  http://localhost:3000/api/products/3
+Content-Type: application/json
+
+{
+    "stock": 123,
+    "name": "RRRRRRRRRR"
+}
+
+### Actualizar un Producto con atributo faltante (PATCH)
+PATCH  http://localhost:3000/api/products/3
+Content-Type: application/json
+
+{
+    "stock": 123,
+}
+
+### Actualizar un Producto con atributo erroneo (PATCH)
+PATCH  http://localhost:3000/api/products/3
+Content-Type: application/json
+
+{
+    "name": "Sardina",
+    "amount":100,
+    "stock":100,
+}
+
+### Actualizar un Producto con atributo erroneo y faltante (PATCH)
+PATCH http://localhost:3000/api/products/3
+Content-Type: application/json
+
+{
+    "amount":100,
+    "stock":100,
+}
+
+### Eliminar un Producto
+DELETE http://localhost:3000/api/products/3
+
+### Eliminar un Producto no existente
+DELETE http://localhost:3000/api/products/999
