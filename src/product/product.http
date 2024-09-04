@@ -2,15 +2,16 @@
 GET http://localhost:3000/api/products
 
 ### Obtener un Producto por ID
-GET http://localhost:3000/api/products/1
+GET http://localhost:3000/api/products/3
 
 ### Crear un Producto
 POST http://localhost:3000/api/products
 Content-Type: application/json
 
 {
-    "stock":100,
-    "name": "Pila AA"
+    "stock":350,
+    "name": "Mayonesa Natura",
+    "img": "https://ardiaprod.vtexassets.com/arquivos/ids/306992/Mayonesa-Natura-250-Ml_1.jpg?v=638599324442400000"
 }
 
 ### Actualizar un Producto
@@ -32,7 +33,7 @@ Content-Type: application/json
 }
 
 ### Eliminar un Producto
-DELETE http://localhost:3000/api/products/3
+DELETE http://localhost:3000/api/products/2
 
 
 
