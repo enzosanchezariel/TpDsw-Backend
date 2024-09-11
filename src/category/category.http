@@ -1,0 +1,35 @@
+### Obtener todos los Descuentos
+GET http://localhost:3000/api/categories
+
+### Obtener un Descuento por ID
+GET http://localhost:3000/api/categories/3
+
+### Crear un Descuento
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+    "name": "Limpieza"
+}
+
+### Actualizar un Descuento
+PUT http://localhost:3000/api/categories/1
+Content-Type: application/json
+
+{
+    "stock": 123,
+    "id": 4,
+    "name": "Alimentos"
+}
+
+### Actualizar un Descuento (PATCH)
+PATCH  http://localhost:3000/api/categories/1
+Content-Type: application/json
+
+{
+    "stock": 123,
+    "name": "RRRRRRRRRR"
+}
+
+### Eliminar un Descuento
+DELETE http://localhost:3000/api/categories/3

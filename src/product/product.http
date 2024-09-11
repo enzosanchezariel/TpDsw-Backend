@@ -10,17 +10,24 @@ Content-Type: application/json
 
 {
     "stock":350,
+    "desc": "Mayonesa Natura 550ml es una mayonesa de calidad superior, elaborada con ingredientes naturales y sin conservantes. Es ideal para acompañar tus comidas y darles un toque especial.",
     "name": "Mayonesa Natura",
-    "img": "https://ardiaprod.vtexassets.com/arquivos/ids/306992/Mayonesa-Natura-250-Ml_1.jpg?v=638599324442400000"
+    "img": "https://ardiaprod.vtexassets.com/arquivos/ids/306992/Mayonesa-Natura-250-Ml_1.jpg?v=638599324442400000",
+    "price": 200,
+    "category": 1
 }
 
 ### Actualizar un Producto
-PUT http://localhost:3000/api/products/3
+PUT http://localhost:3000/api/products/11
 Content-Type: application/json
 
 {
-    "stock": 123,
-    "name": "RRRRRRRRRR"
+    "stock":350,
+    "desc": "Mayonesa Natura 550ml es una mayonesa de calidad superior, elaborada con ingredientes naturales y sin conservantes. Es ideal para acompañar tus comidas y darles un toque especial.",
+    "name": "Mayonesa Natura",
+    "img": "https://ardiaprod.vtexassets.com/arquivos/ids/306992/Mayonesa-Natura-250-Ml_1.jpg?v=638599324442400000",
+    "discount": 10,
+    "category": 1
 }
 
 ### Actualizar un Producto (PATCH)
@@ -34,69 +41,3 @@ Content-Type: application/json
 
 ### Eliminar un Producto
 DELETE http://localhost:3000/api/products/2
-
-
-
-
-
-
-### Obtener un Producto por ID no existente
-GET http://localhost:3000/api/products/999
-
-### Crear un producto con atributo faltante
-POST http://localhost:3000/api/products
-Content-Type: application/json
-
-{
-    "stock":100,
-}
-
-### Crear un producto con atributo erroneo
-POST http://localhost:3000/api/products
-Content-Type: application/json
-
-{
-    "name": "Sardina",
-    "amount":100,
-    "stock":100,
-}
-
-### Crear un producto con atributo erroneo y faltante
-POST http://localhost:3000/api/products
-Content-Type: application/json
-
-{
-    "amount":100,
-    "stock":100,
-}
-
-
-### Actualizar un Producto con atributo faltante
-PUT http://localhost:3000/api/products/3
-Content-Type: application/json
-
-{
-    "stock": 123,
-}
-
-### Actualizar un Producto con atributo erroneo
-PUT http://localhost:3000/api/products/3
-Content-Type: application/json
-
-{
-    "name": "Sardina",
-    "amount":100,
-    "stock":100,
-}
-
-### Actualizar un Producto con atributo erroneo y faltante
-PUT http://localhost:3000/api/products/3
-Content-Type: application/json
-
-{
-    "amount":100,
-    "stock":100,
-}
-
-### Eliminar un Producto no existente
-DELETE http://localhost:3000/api/products/999
