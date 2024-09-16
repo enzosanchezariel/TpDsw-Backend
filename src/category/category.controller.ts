@@ -9,7 +9,7 @@ function sanitizeCategoryInput(req: Request, res: Response, next: NextFunction){
         req.body.sanitizedInput = {
             name: req.body.name,
         }
-       next()
+    next()
     }
 }
 
