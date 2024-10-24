@@ -1,11 +1,10 @@
-import { Router } from 'express'
-import { sanitizeCategoryInput, findAll, findOne, add, update, remove } from './category.controller.js'
+import { Router } from 'express';
+import { sanitizeCategoryInput, findAll, findOne, add, update, remove } from './category.controller.js';
 
-export const categoryRouter = Router()
+export const categoryRouter = Router();
 
-categoryRouter.get('/', findAll)
-categoryRouter.get('/:id', findOne)
-categoryRouter.post('/', sanitizeCategoryInput, add)
-categoryRouter.put('/:id', sanitizeCategoryInput, update)
-categoryRouter.patch('/:id', sanitizeCategoryInput, update)
-categoryRouter.delete('/:id', remove)
+categoryRouter.get('/', findAll); // Ruta para obtener todas las categorías
+categoryRouter.get('/', sanitizeCategoryInput, add); // Ruta para agregar una nueva categoría
+categoryRouter.put('/:id', sanitizeCategoryInput, update); // Ruta para actualizar una categoría
+categoryRouter.patch('/:id', sanitizeCategoryInput, update); // Ruta para actualizar parcialmente una categoría
+categoryRouter.delete('/:id', remove); // Ruta para eliminar una categoría

@@ -12,23 +12,11 @@ function sanitizeProductInput(req: Request, res: Response, next: NextFunction){
             name: req.body.name,
             stock: req.body.stock,
             img: req.body.img,
-
             price: req.body.price,
-                // Creado y actualizado junto al producto
-                // Es opcional en update porque la clave foranea la tiene el precio
-
-                // Tener en cuenta que en la clase de producto, el atributo se llama prices
-                // Price es solo para la request, para crear una instancia de Price con price = req.body.sanitizedInput.price
             discount: req.body.discount,
-                // Creado anteriormente
-                // Desde este controlador solo se cambia el id de la relacion
-                // Desde el controlador de descuentos se actualiza el descuento
-                // Es opcional en update porque admite null
             category: req.body.category
-                // Debe haber por lo menos una categoria registrada antes de crear un producto
-                // Es necesaria en update porque tiene clave foranea
-        }
-       next()
+            }
+    next()
     }
 }
 
@@ -58,7 +46,6 @@ async function add(req: Request, res: Response) {
         const product = em.create(Product, req.body.sanitizedInput)
         const price = new Price()
         price.price = req.body.sanitizedInput.price
-        //const price = em.create(Price, req.body.sanitizedInput.prices)
         product.prices.add(price)
         await em.flush()
         res.status(201).json({ message: 'Product created', data: product })
