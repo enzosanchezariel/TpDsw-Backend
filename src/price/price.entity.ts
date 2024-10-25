@@ -5,10 +5,10 @@ import { Product } from '../product/product.entity.js';
 export class Price {
 
     @PrimaryKey({type: DateTimeType})
-    date = new Date();
+    date: Date = new Date();
     
     @Property({ nullable: false })
-    price!: Number;
+    price!: number;
 
     @ManyToOne(() => Product)
     product!: Rel<Product>;

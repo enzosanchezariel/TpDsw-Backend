@@ -10,7 +10,7 @@ export class User extends BaseEntity{
     name!: string
 
     @Property({nullable: false})
-    second_name!: string
+    last_name!: string
 
     @Property({ unique: true })
     email!: string;
@@ -19,5 +19,5 @@ export class User extends BaseEntity{
     password!: string;
 
     @Property({nullable: false})
-    role!: string;  // Puede ser 'cliente' o 'empleado'
+    role!: string;  // Puede ser 'cliente', 'admin' o 'empleado'
 }
