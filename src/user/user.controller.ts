@@ -13,7 +13,7 @@ function sanitizeUserInput(req: Request, res: Response, next: NextFunction) {
         req.body.sanitizedInput = {
             dni: req.body.dni,
             name: req.body.name,
-            second_name: req.body.second_name,
+            last_name: req.body.last_name,
             email: req.body.email,
             password: req.body.password,
             role: req.body.role
@@ -31,6 +31,12 @@ async function add(req: Request, res: Response) {
         if (existingUser) {
             return res.status(400).json({ message: 'Usuario ya existe' });
         }
+
+        // El rol no lo puede ingresar el usuario, se asigna por defecto y lo modifica un admin (supongo)
+        req.body.sanitizedInput.role = 'cliente';
+
+        // El id del usuario se hace con un string UUID
+        req.body.sanitizedInput.token_id = crypto.randomUUID();
 
         const user = em.create(User, req.body.sanitizedInput);
         await em.persistAndFlush(user);
@@ -50,11 +56,11 @@ async function findAll(req: Request, res: Response) {
     }
 }
 
-// Obtener un usuario por DNI 
+// Obtener un usuario por Email 
 async function findOne(req: Request, res: Response) {
     try {
-        const dni = req.params.dni;
-        const user = await em.findOne(User, { dni });
+        const email = req.params.email;
+        const user = await em.findOne(User, { email });
         if (!user) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
@@ -67,8 +73,8 @@ async function findOne(req: Request, res: Response) {
 // Actualizar usuario
 async function update(req: Request, res: Response) {
     try {
-        const dni = req.params.dni;
-        const userToUpdate = await em.findOneOrFail(User, { dni });
+        const email = req.params.email;
+        const userToUpdate = await em.findOneOrFail(User, { email });
 
         if (req.body.sanitizedInput.password) {
             req.body.sanitizedInput.password = await bcrypt.hash(req.body.sanitizedInput.password, 10);
@@ -85,8 +91,8 @@ async function update(req: Request, res: Response) {
 // Eliminar usuario
 async function remove(req: Request, res: Response) {
     try {
-        const dni = req.params.dni;
-        const user = await em.findOneOrFail(User, { dni });
+        const email = req.params.email;
+        const user = await em.findOneOrFail(User, { email });
         await em.removeAndFlush(user);
         res.status(200).send('Usuario eliminado con éxito');
     } catch (error: any) {

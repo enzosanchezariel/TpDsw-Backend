@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from 'express'
 import { Product } from './product.entity.js'
 import { orm } from '../shared/db/orm.js'
 import { Price } from '../price/price.entity.js'
+import jwt from 'jsonwebtoken';
+import { log } from 'console';
+import { User } from '../user/user.entity.js';
 
 const em = orm.em
 
@@ -41,6 +44,22 @@ async function findOne(req: Request, res: Response) {
 
 
 async function add(req: Request, res: Response) {
+
+    // Manejo de acceso
+    const token = req.cookies.access_token;
+    if (!token) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+    try {
+        const data = jwt.verify(req.cookies.access_token, process.env.JWT_SECRET as string);
+        const user = await em.findOneOrFail(User, { token_id: (data as any).id });
+        if (user.role == "cliente") {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+    } catch (error) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     try {
         const productData = req.body.sanitizedInput
         console.log('Datos recibidos:', productData)

@@ -6,13 +6,21 @@ import { RequestContext } from '@mikro-orm/core';
 import { productRouter } from './product/product.routes.js';
 import { categoryRouter } from './category/category.routes.js';
 import { discountRouter } from './discount/discount.routes.js';
-import { login, signUp } from './auth/auth.controller.js';
 import { userRouter } from './user/user.routes.js';
+import authRouter from './auth/auth.routes.js';
+import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
+
+// Cargar variables de entorno
+dotenv.config();
 
 const app = express();
 
 app.use(express.json());
 app.use(cors()); // Simplificado CORS
+
+// CookieParser Middleware
+app.use(cookieParser());
 
 app.use((req, res, next) => {
   RequestContext.create(orm.em, next);
@@ -24,8 +32,9 @@ app.use('/api/discounts', discountRouter);
 app.use('/api/categories', categoryRouter);
 
 // Rutas de autenticación
-app.post('/api/login', login);
-app.post('/api/signup', signUp);
+//app.post('/api/login', login);
+//app.post('/api/signup', signUp);
+app.use('/api/', authRouter);
 
 // Ruta de usuario
 app.use('/api/users', userRouter);

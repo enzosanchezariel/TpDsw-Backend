@@ -1,8 +1,12 @@
-import { Entity, Property } from '@mikro-orm/core'
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
 import { BaseEntity } from '../shared/db/baseEntity.entity.js';
 
 @Entity()
-export class User extends BaseEntity{
+export class User {
+
+    @PrimaryKey()
+    token_id?: string
+
     @Property()
     dni!: string
 

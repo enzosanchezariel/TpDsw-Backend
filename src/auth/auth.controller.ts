@@ -1,34 +1,74 @@
-import { Request, Response } from 'express';
-import { User } from './user.model.js';
-import { MikroORM } from '@mikro-orm/core';
+import { NextFunction, Request, Response } from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { orm } from '../shared/db/orm.js';
+import { User } from '../user/user.entity.js';
 
-// Controlador para el registro de usuario
-export const signUp = async (req: Request, res: Response) => {
-  const orm = req.app.get('orm') as MikroORM;
-  const { username, password, role } = req.body;
+const em = orm.em.fork();
 
-  const user = orm.em.create(User, { username, password, role });
-  await orm.em.persistAndFlush(user);
-
-  return res.status(201).json({ message: 'User created', user });
-};
+function sanitizeAuthInput(req: Request, res: Response, next: NextFunction) {
+  if (!req.body) {
+      return res.status(400).json({ message: 'Datos de entrada no proporcionados' });
+  } else {
+      req.body.sanitizedInput = {
+          email: req.body.email,
+          password: req.body.password
+      };
+      next();
+  }
+}
 
 // Controlador para el login
-export const login = async (req: Request, res: Response) => {
-  const orm = req.app.get('orm') as MikroORM;
-  const { username, password } = req.body;
+async function login(req: Request, res: Response) {
 
-  const user = await orm.em.findOne(User, { username, password });
-
-  if (!user) {
-    return res.status(401).json({ message: 'Invalid credentials' });
+  try {
+    const email = req.body.sanitizedInput.email;
+    const password = req.body.sanitizedInput.password;
+    const user = await em.findOne(User, { email });
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+    //res.status(200).json({ message: 'Usuario encontrado', data: user });
+    if (await bcrypt.compare(password, user.password)) {
+      //
+      const token = jwt.sign(
+        { id: user.token_id },
+        process.env.JWT_SECRET as string,
+        {
+          expiresIn: '1h'
+        });
+      res.cookie('access_token', token, {
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 1000 * 60 * 60
+      });
+      return res.status(200).json({ message: 'Login successful' });
+    } else {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+  } catch (error: any) {
+      res.status(500).json({ message: error.message });
   }
+}
 
-  if (user.role === 'empleado') {
-    // Lógica para empleados
-  } else if (user.role === 'cliente') {
-    // Lógica para clientes
+async function logout(req: Request, res: Response) {
+  await res.clearCookie('access_token');
+  return res.status(200).json({ message: 'Logout successful' });
+}
+
+// Para utilizar la cookie en cualquier parte del backend
+
+/*
+  import jwt from 'jsonwebtoken';
+  const token = req.cookies.access_token;
+  if (!token) {
+    return res.status(401).json({ message: 'Unauthorized' });
   }
+  try {
+    const data = jwt.verify(req.cookies.access_token, process.env.JWT_SECRET as string);
+  } catch (error) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+*/
 
-  return res.status(200).json({ message: 'Login successful', user });
-};
+export {sanitizeAuthInput, login, logout};

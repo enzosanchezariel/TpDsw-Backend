@@ -5,7 +5,7 @@ Content-Type: application/json
 {
     "dni": "12345678",
     "name": "Juan",
-    "second_name": "Perez",
+    "last_name": "Perez",
     "email": "juan.perez@example.com",
     "password": "password123",
     "role": "cliente"
@@ -21,7 +21,7 @@ Content-Type: application/json
 {
     "dni": "123456789",
     "name": "Juan",
-    "second_name": "Perez",
+    "last_name": "Perez",
     "email": "juan.perez@example.com",
     "password": "newpassword123",
     "role": "empleado"
