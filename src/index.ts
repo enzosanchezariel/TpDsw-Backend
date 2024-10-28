@@ -9,7 +9,6 @@ import { discountRouter } from './discount/discount.routes.js';
 import { userRouter } from './user/user.routes.js';
 import authRouter from './auth/auth.routes.js';
 import dotenv from 'dotenv';
-import cookieParser from 'cookie-parser';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -18,9 +17,6 @@ const app = express();
 
 app.use(express.json());
 app.use(cors()); // Simplificado CORS
-
-// CookieParser Middleware
-app.use(cookieParser());
 
 app.use((req, res, next) => {
   RequestContext.create(orm.em, next);

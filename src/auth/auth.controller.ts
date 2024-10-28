@@ -28,21 +28,20 @@ async function login(req: Request, res: Response) {
     if (!user) {
         return res.status(404).json({ message: 'User not found' });
     }
-    //res.status(200).json({ message: 'Usuario encontrado', data: user });
     if (await bcrypt.compare(password, user.password)) {
-      //
       const token = jwt.sign(
         { id: user.token_id },
         process.env.JWT_SECRET as string,
         {
           expiresIn: '1h'
         });
-      res.cookie('access_token', token, {
-        httpOnly: true,
-        sameSite: 'strict',
-        maxAge: 1000 * 60 * 60
+      return res.status(200).json({
+        message: 'Login successful',
+        data: {
+          access_token: token,
+          role: user.role
+        }
       });
-      return res.status(200).json({ message: 'Login successful' });
     } else {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -51,24 +50,4 @@ async function login(req: Request, res: Response) {
   }
 }
 
-async function logout(req: Request, res: Response) {
-  await res.clearCookie('access_token');
-  return res.status(200).json({ message: 'Logout successful' });
-}
-
-// Para utilizar la cookie en cualquier parte del backend
-
-/*
-  import jwt from 'jsonwebtoken';
-  const token = req.cookies.access_token;
-  if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-  try {
-    const data = jwt.verify(req.cookies.access_token, process.env.JWT_SECRET as string);
-  } catch (error) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-*/
-
-export {sanitizeAuthInput, login, logout};
+export {sanitizeAuthInput, login};

@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import { login, logout, sanitizeAuthInput } from './auth.controller.js';
+import { login, sanitizeAuthInput } from './auth.controller.js';
 
 const authRouter = Router();
 
 // Ruta para el login de usuarios
-authRouter.post('/login', sanitizeAuthInput, login);
-authRouter.post('/logout', logout);
+authRouter.post('/auth/login', sanitizeAuthInput, login);
 
 export default authRouter;
