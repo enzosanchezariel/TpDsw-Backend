@@ -1,0 +1,35 @@
+### Obtener todos los Descuentos
+GET http://localhost:3000/api/discounts
+
+### Obtener un Descuento por ID
+GET http://localhost:3000/api/discounts/3
+
+### Crear un Descuento
+POST http://localhost:3000/api/discounts
+Content-Type: application/json
+
+{
+    "percentage": 300,
+    "units": 2
+}
+
+### Actualizar un Descuento
+PUT http://localhost:3000/api/discounts/1
+Content-Type: application/json
+
+{
+    "percentage": 300,
+    "units": 2
+}
+
+### Actualizar un Descuento (PATCH)
+PATCH  http://localhost:3000/api/discounts/1
+Content-Type: application/json
+
+{
+    "percentage": 300,
+    "units": 2
+}
+
+### Eliminar un Descuento
+DELETE http://localhost:3000/api/discounts/3

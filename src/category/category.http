@@ -1,0 +1,35 @@
+### Obtener todos las Categorias
+GET http://localhost:3000/api/categories
+
+### Obtener una Categoria por ID
+GET http://localhost:3000/api/categories/3
+
+### Crear una Categoria
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+    "name": "Limpieza"
+}
+
+### Actualizar una Categoria
+PUT http://localhost:3000/api/categories/1
+Content-Type: application/json
+
+{
+    "stock": 123,
+    "id": 4,
+    "name": "Alimentos"
+}
+
+### Actualizar una Categoria (PATCH)
+PATCH  http://localhost:3000/api/categories/1
+Content-Type: application/json
+
+{
+    "stock": 123,
+    "name": "RRRRRRRRRR"
+}
+
+### Eliminar una Categoria
+DELETE http://localhost:3000/api/categories/3

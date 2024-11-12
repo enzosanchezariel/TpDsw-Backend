@@ -1,0 +1,34 @@
+### Crear un Usuario
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+    "dni": "12345678",
+    "name": "Juan",
+    "last_name": "Perez",
+    "email": "juan.perez@example.com",
+    "phone": "123456789",
+    "address": "Calle 123",
+    "password": "password123"
+}
+
+### Obtener un Usuario por Email
+GET http://localhost:3000/api/users/juan.perez@example.com
+
+### Actualizar un Usuario por Email
+PUT http://localhost:3000/api/users/juan.perez@example.com
+Content-Type: application/json
+
+{
+    "dni": "123456789",
+    "name": "Juan",
+    "last_name": "Perez",
+    "email": "juan.perez@example.com",
+    "phone": "123456789",
+    "address": "Calle 123",
+    "password": "newpassword123",
+    "role": "empleado"
+}
+
+### Eliminar un Usuario por Email
+DELETE http://localhost:3000/api/users/juan.perez@example.com
