@@ -1,0 +1,94 @@
+### Obtener todos los tickets
+GET http://localhost:3000/api/tickets
+Content-Type: application/json
+
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMwN2FiYmM3LTA3ZGMtNGE1YS1iZjczLTdkYWU0Y2JjNTFkOCIsImlhdCI6MTczMTUyMjc2OCwiZXhwIjoxNzMxNTI2MzY4fQ.NocnTtR8WK5Czzk0EvQo4IsZ-Y6bCUGXS1FoFdCKvEA"
+}
+
+### Obtener un Ticket por ID
+GET http://localhost:3000/api/tickets/17
+Content-Type: application/json
+
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU0M2FhMmFjLTRkOTEtNDJiNS1iOTM2LWU4NzUxOTM2MmRhYSIsImlhdCI6MTczMTUxNDMwMCwiZXhwIjoxNzMxNTE3OTAwfQ.U8YQGZBOWzR9PDrFdKfJez7Y9jyWsaM0D8hrSLA5YLc"
+}
+
+### Obtener Tickets por Usuario
+GET http://localhost:3000/api/tickets/user/543aa2ac-4d91-42b5-b936-e87519362daa
+Content-Type: application/json
+
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU0M2FhMmFjLTRkOTEtNDJiNS1iOTM2LWU4NzUxOTM2MmRhYSIsImlhdCI6MTczMTQ1MTIyNiwiZXhwIjoxNzMxNDU0ODI2fQ.m_DdXP5LBRWx_RB-RMRjfwqMxFN5V3Pvj_6rzjvZWfU"
+}
+
+### Crear un Ticket
+POST http://localhost:3000/api/tickets
+Content-Type: application/json
+
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMwN2FiYmM3LTA3ZGMtNGE1YS1iZjczLTdkYWU0Y2JjNTFkOCIsImlhdCI6MTczMTUyMjc2OCwiZXhwIjoxNzMxNTI2MzY4fQ.NocnTtR8WK5Czzk0EvQo4IsZ-Y6bCUGXS1FoFdCKvEA",
+    "product_amounts": [
+        {
+            "product": 2,
+            "amount": 4
+        },
+        {
+            "product": 3,
+            "amount": 5
+        }
+    ]
+}
+
+### Actualizar un Ticket
+PUT http://localhost:3000/api/tickets/17
+Content-Type: application/json
+
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU0M2FhMmFjLTRkOTEtNDJiNS1iOTM2LWU4NzUxOTM2MmRhYSIsImlhdCI6MTczMTUxNDMwMCwiZXhwIjoxNzMxNTE3OTAwfQ.U8YQGZBOWzR9PDrFdKfJez7Y9jyWsaM0D8hrSLA5YLc",
+    "product_amounts": [
+        {
+            "product": 2,
+            "amount": 4
+        },
+        {
+            "product": 3,
+            "amount": 5
+        }
+    ]
+}
+
+### Actualizar un Ticket (PATCH)
+PATCH  http://localhost:3000/api/tickets/1
+Content-Type: application/json
+
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU0M2FhMmFjLTRkOTEtNDJiNS1iOTM2LWU4NzUxOTM2MmRhYSIsImlhdCI6MTczMTUxNDMwMCwiZXhwIjoxNzMxNTE3OTAwfQ.U8YQGZBOWzR9PDrFdKfJez7Y9jyWsaM0D8hrSLA5YLc",
+    "product_amounts": [
+        {
+            "product": 2,
+            "amount": 4
+        },
+        {
+            "product": 3,
+            "amount": 5
+        }
+    ]
+}
+
+### Eliminar un Ticket
+DELETE http://localhost:3000/api/tickets/20
+Content-Type: application/json
+
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMwN2FiYmM3LTA3ZGMtNGE1YS1iZjczLTdkYWU0Y2JjNTFkOCIsImlhdCI6MTczMTUyMjc2OCwiZXhwIjoxNzMxNTI2MzY4fQ.NocnTtR8WK5Czzk0EvQo4IsZ-Y6bCUGXS1FoFdCKvEA"
+}
+
+### Cambiar estado de un ticket
+PATCH http://localhost:3000/api/tickets/ticketState/22
+Content-Type: application/json
+
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU0M2FhMmFjLTRkOTEtNDJiNS1iOTM2LWU4NzUxOTM2MmRhYSIsImlhdCI6MTczMTQ1MTIyNiwiZXhwIjoxNzMxNDU0ODI2fQ.m_DdXP5LBRWx_RB-RMRjfwqMxFN5V3Pvj_6rzjvZWfU",
+    "state": "enviado"
+}
