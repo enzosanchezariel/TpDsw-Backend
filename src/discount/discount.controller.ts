@@ -7,7 +7,13 @@ const em = orm.em
 // TODO: Chequear que el porcentaje sea un número entre 0 y 100
 
 function sanitizeDiscountInput(req: Request, res: Response, next: NextFunction){
-    if(!req.body){}else{
+    if(!req.body){
+        return res.status(400).json({message: 'No input provided'})
+    }else{
+        const {percentage, units} = req.body
+        if (typeof percentage !== 'number' || percentage < 0 || percentage > 100){
+            return res.status(400).json({message: 'Percentage must be a number between 0 and 100'})
+        }
         req.body.sanitizedInput = {
             percentage: req.body.percentage,
             units: req.body.units
@@ -65,7 +71,7 @@ async function remove(req: Request, res: Response) {
         const id = Number.parseInt(req.params.id)
         const discount = em.getReference(Discount, id)
         await em.removeAndFlush(discount)
-        res.status(200).send('Discount removed')
+        res.status(200).json('Discount removed')
     } catch (error: any) {
         res.status(500).json({ message: error.message })
     }

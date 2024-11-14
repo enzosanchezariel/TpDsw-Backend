@@ -78,7 +78,7 @@ async function remove(req: Request, res: Response) {
             return res.status(404).json({ message: 'Category not found' });
         }
         await em.removeAndFlush(category)
-        res.status(200).send('Category removed')
+        res.status(200).json('Category removed')
     } catch (error: any) {
         res.status(500).json({ message: error.message })
     }
