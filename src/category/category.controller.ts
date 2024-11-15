@@ -131,16 +131,21 @@ async function deactivateCategory(req: Request, res: Response) {
     try {
         const categoryId = Number.parseInt(req.params.id);
         const category = await em.findOne(Category, categoryId);
-
         if (!category) {
             return res.status(404).json({ message: 'Category not found' });
         }
+        category.status = 'inactive'; 
+        await em.flush();
+        const products = await em.find(Product, { category: categoryId });
 
-        // Actualizar el estado de la categoría
-        category.status = 'inactive'; // Suponiendo que tienes un campo 'status'
-        await em.flush(); // Guardar los cambios
+        if (products.length > 0) {
+            products.forEach(product => {
+                product.status = 'inactive';
+            });
+            await em.flush();
+        }
 
-        res.status(200).json({ message: 'Category deactivated' });
+        res.status(200).json({ message: 'Category and associated products deactivated' });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
