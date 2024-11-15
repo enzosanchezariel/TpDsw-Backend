@@ -8,6 +8,8 @@ import { Ticket } from './ticket.entity.js';
 import { ProductAmount } from '../productamount/productamount.entity.js';
 import { Delivery } from '../delivery/delivery.entity.js';
 import { Collection, PopulatePath } from '@mikro-orm/core';
+import { Product } from '../product/product.entity.js';
+import { Discount } from '../discount/discount.entity.js';
 
 const em = orm.em
 
@@ -25,12 +27,15 @@ function sanitizeTicketInput(req: Request, res: Response, next: NextFunction){
 }
 
 async function findAll(req: Request, res: Response) {
+    const authHeader = req.headers.authorization;
 
-    const token = req.body.access_token;
-    let user: User | undefined;
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ message: 'No AUTH token provided' });
     }
+
+    const token = authHeader.split(' ')[1]; // Extraer el token después de "Bearer "
+    let user: User | undefined;
+
     try {
         const data = jwt.verify(token, process.env.JWT_SECRET as string);
         user = await em.findOneOrFail(User, { token_id: (data as any).id });
@@ -43,20 +48,23 @@ async function findAll(req: Request, res: Response) {
     }
 
     try {
-        const tickets = await em.find(Ticket, {}, {populate: ['product_amounts', 'delivery']})
-        res.status(200).json({ message: 'Found all tickets', data: tickets })
+        const tickets = await em.find(Ticket, {}, { populate: ['product_amounts', 'delivery'] });
+        res.status(200).json({ message: 'Found all tickets', data: tickets });
     } catch (error: any) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 }
 
 async function findAllByUser(req: Request, res: Response) {
+    const authHeader = req.headers.authorization;
 
-    const token = req.body.access_token;
-    let user: User | undefined;
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ message: 'No AUTH token provided' });
     }
+
+    const token = authHeader.split(' ')[1]; // Extraer el token después de "Bearer "
+    let user: User | undefined;
+
     try {
         const data = jwt.verify(token, process.env.JWT_SECRET as string);
         user = await em.findOneOrFail(User, { token_id: (data as any).id });
@@ -65,31 +73,36 @@ async function findAllByUser(req: Request, res: Response) {
     }
 
     try {
-        const token_id = req.params.token_id
+        const token_id = req.params.token_id;
 
         const userRequested = await em.findOneOrFail(User, { token_id });
 
-        if (userRequested) {
-            if (userRequested.token_id !== user.token_id && user.role !== 'admin' && user.role !== 'empleado') {
-                return res.status(401).json({ message: 'Unauthorized' });
-            } else {
-                const tickets = await em.find(Ticket, { user: userRequested }, {populate: ['product_amounts', 'delivery']})
-                res.status(200).json({ message: 'Found all tickets', data: tickets })
-            }
+        if (!userRequested) {
+            return res.status(404).json({ message: 'User not found' });
         }
 
+        if (userRequested.token_id !== user.token_id && user.role !== 'admin' && user.role !== 'empleado') {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const tickets = await em.find(Ticket, { user: userRequested }, { populate: ['product_amounts', 'delivery'] });
+        res.status(200).json({ message: 'Found all tickets', data: tickets });
+
     } catch (error: any) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 }
 
 async function findOne(req: Request, res: Response) {
+    const authHeader = req.headers.authorization;
 
-    const token = req.body.access_token;
-    let user: User | undefined;
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ message: 'No AUTH token provided' });
     }
+
+    const token = authHeader.split(' ')[1]; // Extraer el token después de "Bearer "
+    let user: User | undefined;
+
     try {
         const data = jwt.verify(token, process.env.JWT_SECRET as string);
         user = await em.findOneOrFail(User, { token_id: (data as any).id });
@@ -102,22 +115,26 @@ async function findOne(req: Request, res: Response) {
     }
 
     try {
-        const number = Number.parseInt(req.params.number)
-        const ticket = await em.findOneOrFail(Ticket, { number }, {populate: ['product_amounts', 'delivery']})
+        const number = Number.parseInt(req.params.number);
+
+        const ticket = await em.findOneOrFail(
+            Ticket,
+            { number },
+            { populate: ['product_amounts', 'delivery'] }
+        );
 
         if (ticket.user.token_id !== user.token_id && user.role !== 'admin' && user.role !== 'empleado') {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-        
-        res.status(200).json({ message: 'Found ticket', data: ticket })
+
+        res.status(200).json({ message: 'Found ticket', data: ticket });
     } catch (error: any) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 }
 
 
 async function add(req: Request, res: Response) {
-
     const token = req.body.access_token;
     let user: User | undefined;
 
@@ -137,7 +154,32 @@ async function add(req: Request, res: Response) {
     }
 
     try {
-        const ticket = em.create(Ticket, { ...req.body.sanitizedInput, user });
+        // Use a proper async loop to populate the newPAs array
+        let newPAs: { product: number; amount: number; discount: number | undefined }[] = [];
+        
+        // Using Promise.all to ensure all async operations complete before continuing
+        await Promise.all(req.body.sanitizedInput.product_amounts.map(async (aProductAmount: any) => {
+            let newPa: { product: number, amount: number, discount: number | undefined } = { 
+                product: -1, 
+                amount: -1, 
+                discount: undefined 
+            };
+
+            newPa.product = aProductAmount.product;
+            newPa.amount = aProductAmount.amount;
+
+            // Fetch the product with the discount info
+            const foundProduct = await em.findOneOrFail(Product, { id: aProductAmount.product }, { populate: ['discount'] });
+            if (foundProduct.discount && aProductAmount.amount >= foundProduct.discount.units) {
+                newPa.discount = foundProduct.discount.id;
+            }
+
+            // Push the populated object to newPAs
+            newPAs.push(newPa);
+        }));
+
+        // Now we can safely create the ticket as all async operations are done
+        const ticket = em.create(Ticket, { ...req.body.sanitizedInput, product_amounts: newPAs, user });
 
         await em.persistAndFlush(ticket);
         res.status(201).json({ message: 'Ticket created', data: ticket });
