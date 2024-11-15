@@ -16,10 +16,10 @@ Content-Type: application/json
 GET http://localhost:3000/api/users
 
 ### Obtener un Usuario por Email
-GET http://localhost:3000/api/users/juan.perez@example.com
+GET http://localhost:3000/api/users/a@example.com
 
 ### Actualizar un Usuario por Email
-PUT http://localhost:3000/api/users/juan.perez@example.com
+PUT http://localhost:3000/api/users/a@example.com
 Content-Type: application/json
 
 {
@@ -34,4 +34,4 @@ Content-Type: application/json
 }
 
 ### Eliminar un Usuario por Email
-DELETE http://localhost:3000/api/users/juan.perez@example.com
+DELETE http://localhost:3000/api/users/a@example.com

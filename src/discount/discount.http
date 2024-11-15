@@ -33,3 +33,6 @@ Content-Type: application/json
 
 ### Eliminar un Descuento
 DELETE http://localhost:3000/api/discounts/1
+
+### Baja logica de un Descuento
+PATCH http://localhost:3000/api/discounts/1

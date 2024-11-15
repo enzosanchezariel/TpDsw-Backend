@@ -7,6 +7,9 @@ export class Category extends BaseEntity{
 
     @Property({nullable: false})
     name!: string
+
+    @Property({ default: 'active' })
+    status!: string
     
     @OneToMany(() => Product, (product) => product.category, {cascade: [Cascade.ALL]})
     products = new Collection<Product>(this)
