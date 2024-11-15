@@ -3,7 +3,7 @@ GET http://localhost:3000/api/tickets
 Content-Type: application/json
 
 {
-    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMwN2FiYmM3LTA3ZGMtNGE1YS1iZjczLTdkYWU0Y2JjNTFkOCIsImlhdCI6MTczMTUyMjc2OCwiZXhwIjoxNzMxNTI2MzY4fQ.NocnTtR8WK5Czzk0EvQo4IsZ-Y6bCUGXS1FoFdCKvEA"
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4NDlhODVjLTY2M2YtNDJkMi1hZjFlLTA2Y2Y2ZDgwYmUyMCIsImlhdCI6MTczMTYyNTcxMSwiZXhwIjoxNzMxNjI5MzExfQ.PH4FpF3fBQVXLRA0g3cRQ5ICX4n1M8Ux_q9-9P9TcHk"
 }
 
 ### Obtener un Ticket por ID
@@ -27,14 +27,14 @@ POST http://localhost:3000/api/tickets
 Content-Type: application/json
 
 {
-    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMwN2FiYmM3LTA3ZGMtNGE1YS1iZjczLTdkYWU0Y2JjNTFkOCIsImlhdCI6MTczMTUyMjc2OCwiZXhwIjoxNzMxNTI2MzY4fQ.NocnTtR8WK5Czzk0EvQo4IsZ-Y6bCUGXS1FoFdCKvEA",
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4NDlhODVjLTY2M2YtNDJkMi1hZjFlLTA2Y2Y2ZDgwYmUyMCIsImlhdCI6MTczMTYyNTcxMSwiZXhwIjoxNzMxNjI5MzExfQ.PH4FpF3fBQVXLRA0g3cRQ5ICX4n1M8Ux_q9-9P9TcHk",
     "product_amounts": [
         {
-            "product": 2,
+            "product": 1,
             "amount": 4
         },
         {
-            "product": 3,
+            "product": 2,
             "amount": 5
         }
     ]
