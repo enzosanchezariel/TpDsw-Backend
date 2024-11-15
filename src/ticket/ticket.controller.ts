@@ -268,12 +268,17 @@ async function update(req: Request, res: Response) {
 // Los usuarios comunes solo pueden eliminar sus pedidos y solo si estan en preparacion
 // Los empleados y los admins pueden eliminar cualquier pedido
 async function remove(req: Request, res: Response) {
-
-    const token = req.body.access_token;
+    const authHeader = req.headers.authorization;
     let user: User | undefined;
-    if (!token) {
-        return res.status(401).json({ message: 'No AUTH token provided' });
+
+    // Verificar que el encabezado esté presente y tenga el formato correcto
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'No AUTH token provided or invalid format' });
     }
+
+    // Extraer el token eliminando el prefijo "Bearer "
+    const token = authHeader.split(' ')[1];
+
     try {
         const data = jwt.verify(token, process.env.JWT_SECRET as string);
         user = await em.findOneOrFail(User, { token_id: (data as any).id });
@@ -304,16 +309,9 @@ async function remove(req: Request, res: Response) {
             return res.status(400).json({ message: 'Ticket can only be removed if it is in "enPreparacion" state' });
         }
 
-        if (ticket.product_amounts.length > 0) {
-            ticket.product_amounts.getItems().forEach((pa) => em.remove(pa));
-        }
+        ticket.state = "rechazado";
 
-        if (ticket.delivery) {
-            em.remove(ticket.delivery);
-            ticket.delivery = undefined;
-        }
-
-        await em.removeAndFlush(ticket);
+        await em.flush();
 
         res.status(200).json({ message: 'Ticket removed' });
     } catch (error: any) {
