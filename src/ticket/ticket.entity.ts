@@ -16,7 +16,7 @@ export class Ticket {
     @Property({nullable: true})
     state?: string = 'enPreparacion'
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, {nullable: true, deleteRule: 'set null'})
     user!: Rel<User>
 
     @OneToMany(() => ProductAmount, (product_amounts) => product_amounts.ticket, {cascade: [Cascade.ALL]})
