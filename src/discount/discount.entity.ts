@@ -11,6 +11,9 @@ export class Discount extends BaseEntity{
     @Property({nullable: false})
     units!: number
 
+    @Property({ default: 'active' })
+    status!: string
+
     @OneToMany(() => Product, (product) => product.discount, {nullable: true})
     products? = new Collection<Product>(this)
 }
