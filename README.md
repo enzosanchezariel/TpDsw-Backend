@@ -5,8 +5,8 @@
 - Sanchez Enzo
 - Spertino Mateo
 # Material de entrega
-[Video](https://drive.google.com/file/d/1M3vf3ebXdHF9g58jad-GcBSUtBgUg9-H/view?usp=sharing)
-[Link al Pull Request](https://github.com/enzosanchezariel/TpDsw-Backend/pulls)
+- [Video](https://drive.google.com/file/d/1M3vf3ebXdHF9g58jad-GcBSUtBgUg9-H/view?usp=sharing)
+- [Link al Pull Request](https://github.com/enzosanchezariel/TpDsw-Backend/pulls)
 # Instalación
 ## Instale NPM, NodeJS y MySQL
 - [NodeJS](https://nodejs.org/en/download/)
