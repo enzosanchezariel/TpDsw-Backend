@@ -48,7 +48,7 @@ async function findAll(req: Request, res: Response) {
     }
 
     try {
-        const tickets = await em.find(Ticket, {}, { populate: ['product_amounts', 'delivery'] });
+        const tickets = await em.find(Ticket, {}, { populate: ['product_amounts', 'delivery', 'user'] });
         res.status(200).json({ message: 'Found all tickets', data: tickets });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
@@ -188,8 +188,6 @@ async function add(req: Request, res: Response) {
     }
 }
 
-// Los usuarios comunes solo pueden actualizar sus pedidos y solo si estan en preparacion
-// Los empleados y los admins pueden actualizar cualquier pedido
 async function update(req: Request, res: Response) {
 
     const token = req.body.access_token;
@@ -214,50 +212,14 @@ async function update(req: Request, res: Response) {
         if (ticketToUpdate.user.token_id !== user.token_id && user.role !== 'admin' && user.role !== 'empleado') {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-
-        if (ticketToUpdate.state !== 'enPreparacion' && ticketToUpdate.user.token_id === user.token_id && user.role !== 'admin' && user.role !== 'empleado') {
-            return res.status(400).json({ message: 'Ticket can only be updated if it is in "enPreparacion" state' });
+        ticketToUpdate.state = req.body.sanitizedInput.state;
+        if ((ticketToUpdate.state === 'enviado' || ticketToUpdate.state === 'enEnvio') && !ticketToUpdate.delivery) {
+            ticketToUpdate.delivery = new Delivery();
+            ticketToUpdate.delivery.ticket = ticketToUpdate;
         }
-
-        if (ticketToUpdate.product_amounts.length > 0) {
-            ticketToUpdate.product_amounts.getItems().forEach((pa) => em.remove(pa));
+        if (ticketToUpdate.delivery && ticketToUpdate.state === 'enviado') {
+            ticketToUpdate.delivery.date = new Date();
         }
-
-        if (!req.body.sanitizedInput.product_amounts) {
-            return res.status(400).json({ message: 'All fields are required' });
-        }
-
-        ticketToUpdate.date = new Date();
-
-        req.body.sanitizedInput.product_amounts.forEach((aProductAmount: ProductAmount) => {
-            const productAmount = new ProductAmount();
-            try {
-                productAmount.amount = aProductAmount.amount;
-                productAmount.product = aProductAmount.product;
-                productAmount.ticket = ticketToUpdate;
-                ticketToUpdate.product_amounts.add(productAmount);
-            } catch (error: any) {
-                return res.status(500).json({ message: "Error in product_amount syntax: " + error.message });
-            }
-        });
-
-        /*
-        if (ticketToUpdate.delivery && !req.body.sanitizedInput.isDelivery) {
-            em.remove(ticketToUpdate.delivery);
-            ticketToUpdate.delivery = undefined;
-        }
-
-        if (req.body.sanitizedInput.isDelivery) {
-            const newDelivery = new Delivery();
-            if (ticketToUpdate.delivery) {
-                ticketToUpdate.delivery.tracking_number = newDelivery.tracking_number;
-            } else {
-                ticketToUpdate.delivery = newDelivery;
-                ticketToUpdate.delivery.ticket = ticketToUpdate;
-            }
-        }
-        */
-
         await em.flush();
         res.status(200).json({ message: 'Ticket updated', data: ticketToUpdate });
     } catch (error: any) {
