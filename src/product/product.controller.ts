@@ -15,6 +15,7 @@ function sanitizeProductInput(req: Request, res: Response, next: NextFunction){
             name: req.body.name,
             stock: req.body.stock,
             img: req.body.img,
+            status: 'active',
             prices: req.body.prices,
             discount: req.body.discount,
             category: req.body.category
@@ -25,20 +26,33 @@ function sanitizeProductInput(req: Request, res: Response, next: NextFunction){
 
 async function findAll(req: Request, res: Response) {
     try {
-        const products = await em.find(Product, {}, {populate: ['category', 'discount', 'prices']})
-        res.status(200).json({ message: 'Found all products', data: products })
+        const products = await em.find(
+            Product,
+            { status: 'active' },
+            { populate: ['category', 'discount', 'prices'] }
+        );
+        res.status(200).json({ message: 'Found all active products', data: products });
     } catch (error: any) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 }
 
+
 async function findOne(req: Request, res: Response) {
     try {
-        const id = Number.parseInt(req.params.id)
-        const product = await em.findOneOrFail(Product, { id }, {populate: ['category', 'discount', 'prices']})
-        res.status(200).json({ message: 'Found product', data: product })
+        const id = Number.parseInt(req.params.id);
+        const product = await em.findOneOrFail(
+            Product,
+            { id, status: 'active' },
+            { populate: ['category', 'discount', 'prices'] }
+        );
+        res.status(200).json({ message: 'Found active product', data: product });
     } catch (error: any) {
-        res.status(500).json({ message: error.message })
+        if (error.name === 'EntityNotFoundError') {
+            res.status(404).json({ message: 'Product not found or not active' });
+        } else {
+            res.status(500).json({ message: error.message });
+        }
     }
 }
 
@@ -151,9 +165,31 @@ async function remove(req: Request, res: Response) {
     }
 }
 
+async function deactivate(req: Request, res: Response) {
+    try {
+        const id = Number.parseInt(req.params.id);
+
+        // Buscar el producto
+        const product = await em.findOneOrFail(Product, { id });
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        // Actualizar el estado del producto a 'inactive' para realizar la baja lógica
+        product.status = 'inactive';
+
+        // Guardar los cambios en la base de datos
+        await em.flush();
+
+        res.status(200).json({ message: 'Product deactivated', data: product });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
 
-export { sanitizeProductInput, findAll, findOne, add, update, remove, search}
+
+export { sanitizeProductInput, findAll, findOne, add, update, remove, search, deactivate}
 
 function moment() {
     throw new Error('Function not implemented.');

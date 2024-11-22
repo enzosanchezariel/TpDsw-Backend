@@ -2,15 +2,17 @@
 GET http://localhost:3000/api/categories
 
 ### Obtener una Categoria por ID
-GET http://localhost:3000/api/categories/3
+GET http://localhost:3000/api/categories/1
 
 ### Crear una Categoria
 POST http://localhost:3000/api/categories
 Content-Type: application/json
 
 {
-    "name": "Limpieza"
+  "name": "Electronics",
+  "status": "active"
 }
+
 
 ### Actualizar una Categoria
 PUT http://localhost:3000/api/categories/1
@@ -18,18 +20,12 @@ Content-Type: application/json
 
 {
     "stock": 123,
-    "id": 4,
+    "id": 1,
     "name": "Alimentos"
-}
-
-### Actualizar una Categoria (PATCH)
-PATCH  http://localhost:3000/api/categories/1
-Content-Type: application/json
-
-{
-    "stock": 123,
-    "name": "RRRRRRRRRR"
 }
 
 ### Eliminar una Categoria
 DELETE http://localhost:3000/api/categories/3
+
+### Baja logica de una Categoria
+PATCH http://localhost:3000/api/categories/1

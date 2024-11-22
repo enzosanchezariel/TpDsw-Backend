@@ -9,6 +9,7 @@ import { discountRouter } from './discount/discount.routes.js';
 import { userRouter } from './user/user.routes.js';
 import authRouter from './auth/auth.routes.js';
 import dotenv from 'dotenv';
+import { ticketRouter } from './ticket/ticket.routes.js';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 app.use('/api/products', productRouter);
 app.use('/api/discounts', discountRouter);
 app.use('/api/categories', categoryRouter);
+app.use('/api/tickets', ticketRouter);
 
 // Rutas de autenticación
 //app.post('/api/login', login);
