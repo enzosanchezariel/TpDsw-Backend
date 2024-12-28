@@ -43,7 +43,7 @@ async function findOne(req: Request, res: Response) {
         const id = Number.parseInt(req.params.id);
         const product = await em.findOneOrFail(
             Product,
-            { id, status: 'active' },
+            { id },
             { populate: ['category', 'discount', 'prices'] }
         );
         res.status(200).json({ message: 'Found active product', data: product });
@@ -149,7 +149,7 @@ async function search(req: Request, res: Response) {
     }
 }
 
-async function remove(req: Request, res: Response) {
+/*async function remove(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id);
 
@@ -163,7 +163,7 @@ async function remove(req: Request, res: Response) {
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
-}
+}*/
 
 async function deactivate(req: Request, res: Response) {
     try {
@@ -189,7 +189,7 @@ async function deactivate(req: Request, res: Response) {
 
 
 
-export { sanitizeProductInput, findAll, findOne, add, update, remove, search, deactivate}
+export { sanitizeProductInput, findAll, findOne, add, update, search, deactivate}
 
 function moment() {
     throw new Error('Function not implemented.');
