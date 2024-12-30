@@ -1,5 +1,6 @@
 import { Router } from 'express'
-import { sanitizeProductInput, findAll, findOne, add, update, remove, search, deactivate, increaseStock } from './product.controller.js'
+import { sanitizeProductInput, findAll, findOne, add, update, search, deactivate, increaseStock } from './product.controller.js'
+
 
 export const productRouter = Router()
 
@@ -10,4 +11,4 @@ productRouter.post('/', sanitizeProductInput, add)
 productRouter.post('/:id/increase-stock', increaseStock)
 productRouter.put('/:id', sanitizeProductInput, update)
 productRouter.patch('/:id', deactivate)
-productRouter.delete('/:id', remove)
+productRouter.delete('/:id', deactivate)

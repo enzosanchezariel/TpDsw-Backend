@@ -169,7 +169,7 @@ async function add(req: Request, res: Response) {
             newPa.amount = aProductAmount.amount;
 
             // Fetch the product with the discount info
-            const foundProduct = await em.findOneOrFail(Product, { id: aProductAmount.product }, { populate: ['discount'] });
+            const foundProduct = await em.findOneOrFail(Product, { id: aProductAmount.product, status: 'active' }, { populate: ['discount'] });
             if (foundProduct.discount && aProductAmount.amount >= foundProduct.discount.units) {
                 newPa.discount = foundProduct.discount.id;
             }
