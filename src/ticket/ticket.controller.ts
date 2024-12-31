@@ -154,6 +154,7 @@ async function add(req: Request, res: Response) {
     }
 
     try {
+        let errorOccurred: boolean = false;
         // Use a proper async loop to populate the newPAs array
         let newPAs: { product: number; amount: number; discount: number | undefined }[] = [];
         
@@ -174,9 +175,20 @@ async function add(req: Request, res: Response) {
                 newPa.discount = foundProduct.discount.id;
             }
 
+            if (foundProduct.stock < aProductAmount.amount) {
+                errorOccurred = true;
+            } else {
+                foundProduct.stock -= aProductAmount.amount;
+                //await em.flush();
+            }
+
             // Push the populated object to newPAs
             newPAs.push(newPa);
         }));
+
+        if (errorOccurred) {
+            return res.status(400).json({ message: 'Not enough stock for product ', errorCode: 'not_enough_stock' });
+        }
 
         // Now we can safely create the ticket as all async operations are done
         const ticket = em.create(Ticket, { ...req.body.sanitizedInput, product_amounts: newPAs, user });
@@ -273,6 +285,14 @@ async function remove(req: Request, res: Response) {
 
         ticket.state = "rechazado";
 
+        // Aumentar stock del producto nuevamente
+        for (let pa of ticket.product_amounts) {
+            const product = await em.findOne(Product, { id: pa.product.id });
+            if (product) {
+                product.stock += pa.amount;
+            }
+        }
+
         await em.flush();
 
         res.status(200).json({ message: 'Ticket removed' });
@@ -320,6 +340,15 @@ async function changeTicketState(req: Request, res: Response) {
         
         if (req.body.sanitizedInput.state === 'rechazado') {
             ticket.state = 'rechazado';
+
+            // Aumentar stock del producto nuevamente
+            for (let pa of ticket.product_amounts) {
+                const product = await em.findOne(Product, { id: pa.product.id });
+                if (product) {
+                    product.stock += pa.amount;
+                }
+            }
+
         } else if (req.body.sanitizedInput.state === 'enEnvio') {
             if (ticket.state === 'enPreparacion') {
                 
