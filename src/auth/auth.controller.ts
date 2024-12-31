@@ -33,13 +33,14 @@ async function login(req: Request, res: Response) {
         { id: user.token_id },
         process.env.JWT_SECRET as string,
         {
-          expiresIn: '1h'
+          expiresIn: '23h'
         });
       return res.status(200).json({
         message: 'Login successful',
         data: {
           access_token: token,
-          role: user.role
+          role: user.role,
+          token_id: user.token_id
         }
       });
     } else {
