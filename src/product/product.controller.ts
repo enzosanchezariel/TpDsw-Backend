@@ -96,34 +96,40 @@ async function add(req: Request, res: Response) {
 async function update(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id);
-        
+
         // Encuentra el producto a actualizar
-        const productToUpdate = await em.findOneOrFail(Product, { id });
+        const productToUpdate = await em.findOneOrFail(Product, { id }, { populate: ['prices'] });
         if (!productToUpdate) {
             return res.status(404).json({ message: 'Product not found' });
         }
 
-        // Extrae y valida el precio de la entrada
-        const { prices, ...sanitizedInput } = req.body.sanitizedInput;
-        if (!prices) {
-            return res.status(400).json({ message: 'Price is required' });
+        const { prices, discount_id, ...sanitizedInput } = req.body;
+
+        // Validar si el precio ha cambiado
+        const lastPrice = productToUpdate.prices.getItems().sort((a, b) => b.date.getTime() - a.date.getTime())[0];
+        if (!prices || (lastPrice && lastPrice.price === prices)) {
+            console.log('El precio no ha cambiado. No se creará un nuevo registro de precio.');
+        } else {
+            // Crear una nueva instancia de Price y asociarla al producto
+            const newPrice = new Price();
+            newPrice.price = prices;
+            newPrice.date = new Date();
+            productToUpdate.prices.add(newPrice);
         }
 
-        // Crea una nueva instancia de Price y la asocia al producto
-        const newPrice = new Price();
-        newPrice.price = prices; // Asegúrate de que 'prices' contiene el valor numérico correcto
-        newPrice.date = new Date();
-        
-        // Añade el nuevo precio al producto y guarda los cambios
-        productToUpdate.prices.add(newPrice);
-        em.assign(productToUpdate, sanitizedInput); // Asigna el resto de los campos actualizados del producto
-        
+        // Manejar el descuento (permitir null)
+        sanitizedInput.discount_id = discount_id === null || discount_id === 'null' ? null : discount_id;
+
+        // Asignar otros campos del producto y guardar cambios
+        em.assign(productToUpdate, sanitizedInput);
+
         await em.flush(); // Guarda en la base de datos
         res.status(200).json({ message: 'Product updated', data: productToUpdate });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
 }
+
 
 async function search(req: Request, res: Response) {
     const nameQuery = req.query.name as string;
@@ -187,9 +193,35 @@ async function deactivate(req: Request, res: Response) {
     }
 }
 
+async function increaseStock(req: Request, res: Response) {
+    try {
+        const id = Number.parseInt(req.params.id);
+        const increaseAmount = Number.parseInt(req.body.increaseAmount);
 
+        // Verificar que increaseAmount es un número válido
+        if (isNaN(increaseAmount) || increaseAmount <= 0) {
+            return res.status(400).json({ message: 'Cantidad de aumento inválida' });
+        }
 
-export { sanitizeProductInput, findAll, findOne, add, update, search, deactivate}
+        // Buscar el producto
+        const product = await em.findOneOrFail(Product, { id });
+        if (!product) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+        // Aumentar el stock del producto
+        product.stock += increaseAmount;
+
+        // Guardar los cambios en la base de datos
+        await em.flush();
+
+        res.status(200).json({ message: 'Stock aumentado', data: product });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export { sanitizeProductInput, findAll, findOne, add, update, search, deactivate, increaseStock}
 
 function moment() {
     throw new Error('Function not implemented.');

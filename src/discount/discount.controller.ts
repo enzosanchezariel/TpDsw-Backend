@@ -57,16 +57,39 @@ async function add(req: Request, res: Response) {
 
 async function update(req: Request, res: Response) {
     try {
-        const id = Number.parseInt(req.params.id)
-        const discountToUpdate = await em.findOneOrFail(Discount, { id })
-        req.body.sanitizedInput.id = id
-        em.assign(discountToUpdate, req.body.sanitizedInput)
-        await em.flush()
-        res.status(200).json({ message: 'Discount updated', data: discountToUpdate })
+        const id = Number.parseInt(req.params.id);
+        const discountToUpdate = await em.findOneOrFail(Discount, { id });
+
+        // Verificar que req.body.sanitizedInput tiene los datos esperados
+        if (!req.body.sanitizedInput || Object.keys(req.body.sanitizedInput).length === 0) {
+            return res.status(400).json({ message: 'No data provided for update.' });
+        }
+
+        // Asignar solo los campos válidos, asegurándose de que 'status' no sea undefined
+        const sanitizedInput = req.body.sanitizedInput;
+
+        // Evitar la asignación del id
+        delete sanitizedInput.id;
+
+        // Asegurarse de que el 'status' no sea undefined
+        if (sanitizedInput.status === undefined) {
+            sanitizedInput.status = discountToUpdate.status;  // Mantener el valor actual de 'status'
+        }
+
+        // Asignar los valores al objeto de descuento
+        em.assign(discountToUpdate, sanitizedInput);
+
+        // Guardar los cambios en la base de datos
+        await em.flush();
+
+        // Enviar respuesta de éxito
+        res.status(200).json({ message: 'Discount updated', data: discountToUpdate });
     } catch (error: any) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 }
+
+
 
 async function remove(req: Request, res: Response) {
     try {
