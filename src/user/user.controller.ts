@@ -88,6 +88,22 @@ async function update(req: Request, res: Response) {
     }
 }
 
+// Actualizar rol de usuario
+async function changeUserRole(req: Request, res: Response) {
+    try {
+        const email = req.params.email;
+        const newRole = req.body.role;
+        const user = await em.findOneOrFail(User, { email });
+        user.role = newRole;
+
+        await em.flush();
+        res.status(200).json({ message: 'Rol del usuario actualizado con éxito', data: user });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+
 // Eliminar usuario
 async function remove(req: Request, res: Response) {
     try {
@@ -100,4 +116,4 @@ async function remove(req: Request, res: Response) {
     }
 }
 
-export { sanitizeUserInput, findAll, findOne, add, update, remove };
+export { sanitizeUserInput, findAll, findOne, add, update, changeUserRole, remove };
