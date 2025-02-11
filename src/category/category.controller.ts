@@ -94,39 +94,39 @@ async function getProductsByCategory(req: Request, res: Response) {
   }
 }
 
-async function remove(req: Request, res: Response) {
-    const em = orm.em.fork();
-    try {
-        const id = Number.parseInt(req.params.id);
+// async function remove(req: Request, res: Response) {
+//     const em = orm.em.fork();
+//     try {
+//         const id = Number.parseInt(req.params.id);
 
-        // Buscar productos de la categoría
-        const products = await em.find(Product, { category: id });
+//         // Buscar productos de la categoría
+//         const products = await em.find(Product, { category: id });
 
-        if (products.length > 0) {
-            // Eliminar precios asociados a los productos
-            const productIds = products.map(product => product.id).filter(id => id !== undefined);
-            await em.nativeDelete(Price, { product: productIds }); // Eliminar precios asociados
+//         if (products.length > 0) {
+//             // Eliminar precios asociados a los productos
+//             const productIds = products.map(product => product.id).filter(id => id !== undefined);
+//             await em.nativeDelete(Price, { product: productIds }); // Eliminar precios asociados
 
-            // Eliminar los productos
-            await em.nativeDelete(Product, { category: id }); // Eliminar productos
-        }
+//             // Eliminar los productos
+//             await em.nativeDelete(Product, { category: id }); // Eliminar productos
+//         }
 
-        // Eliminar la categoría
-        const category = await em.findOne(Category, id);
-        if (!category) {
-            return res.status(404).json({ message: 'Category not found' });
-        }
+//         // Eliminar la categoría
+//         const category = await em.findOne(Category, id);
+//         if (!category) {
+//             return res.status(404).json({ message: 'Category not found' });
+//         }
 
-        // Eliminar la categoría
-        await em.nativeDelete(Category, { id: id });
+//         // Eliminar la categoría
+//         await em.nativeDelete(Category, { id: id });
 
-        res.status(200).json('Category, products, and associated prices removed');
-    } catch (error: any) {
-        res.status(500).json({ message: error.message });
-    }
-}
+//         res.status(200).json('Category, products, and associated prices removed');
+//     } catch (error: any) {
+//         res.status(500).json({ message: error.message });
+//     }
+// }
 
-async function deactivateCategory(req: Request, res: Response) {
+async function desactivateCategory(req: Request, res: Response) {
     const em = orm.em.fork();
     try {
         const categoryId = Number.parseInt(req.params.id);
@@ -155,4 +155,4 @@ async function deactivateCategory(req: Request, res: Response) {
 
 
 
-export { sanitizeCategoryInput, findAll, findOne, add, update, remove, deactivateCategory}
+export { sanitizeCategoryInput, findAll, findOne, add, update, desactivateCategory}

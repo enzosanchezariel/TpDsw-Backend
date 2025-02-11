@@ -171,7 +171,7 @@ async function search(req: Request, res: Response) {
     }
 }*/
 
-async function deactivate(req: Request, res: Response) {
+async function desactivate(req: Request, res: Response) {
     try {
         const id = Number.parseInt(req.params.id);
 
@@ -221,7 +221,7 @@ async function increaseStock(req: Request, res: Response) {
     }
 }
 
-export { sanitizeProductInput, findAll, findOne, add, update, search, deactivate, increaseStock}
+export { sanitizeProductInput, findAll, findOne, add, update, search, desactivate, increaseStock}
 
 function moment() {
     throw new Error('Function not implemented.');

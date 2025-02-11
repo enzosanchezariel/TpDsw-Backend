@@ -275,9 +275,9 @@ async function remove(req: Request, res: Response) {
 
         const ticketUser = em.getReference(User, ticket.user);
 
-        if (ticketUser.token_id !== user.token_id && user.role !== 'admin' && user.role !== 'empleado') {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
+        // if (ticketUser.token_id !== user.token_id || user.role !== 'admin' && user.role !== 'empleado') {
+        //     return res.status(401).json({ message: 'Unauthorized' });
+        // }
 
         if (ticket.state !== 'enPreparacion' && ticketUser.token_id === user.token_id && user.role !== 'admin' && user.role !== 'empleado') {
             return res.status(400).json({ message: 'Ticket can only be removed if it is in "enPreparacion" state' });
