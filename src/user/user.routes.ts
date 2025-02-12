@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { sanitizeUserInput, findAll, findOne, add, update, remove } from './user.controller.js';
+import { sanitizeUserInput, findAll, findOne, add, update, remove, changeUserRole } from './user.controller.js';
 
 export const userRouter = Router();
 
@@ -8,5 +8,6 @@ userRouter.get('/', findAll);                // Obtener todos los usuarios
 userRouter.get('/:email', findOne);            // Obtener un usuario por DNI
 userRouter.post('/', sanitizeUserInput, add); // Crear un nuevo usuario
 userRouter.put('/:email', sanitizeUserInput, update); // Actualizar un usuario por DNI (PUT)
+userRouter.put('/:email/role', sanitizeUserInput, changeUserRole); // Actualizar un usuario parcialmente (PATCH)
 userRouter.patch('/:email', sanitizeUserInput, update); // Actualizar un usuario parcialmente (PATCH)
 userRouter.delete('/:email', remove);          // Eliminar un usuario por DNI
