@@ -19,6 +19,9 @@ export class Product extends BaseEntity{
     @Property({nullable: false})
     desc!: string
 
+    @Property({ default: 'active' })  // O 'inactive' / 'deleted'
+    status!: string; 
+
     @OneToMany(() => Price, (price) => price.product, {cascade: [Cascade.ALL]})
     prices = new Collection<Price>(this)
     

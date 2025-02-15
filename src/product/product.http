@@ -2,7 +2,7 @@
 GET http://localhost:3000/api/products
 
 ### Obtener un Producto por ID
-GET http://localhost:3000/api/products/3
+GET http://localhost:3000/api/products/1
 
 ### Obtener un Producto por Name
 GET http://localhost:3000/api/products/search?name=m
@@ -18,7 +18,7 @@ Content-Type: application/json
     "name": "Mayonesa Natura",
     "img": "https://ardiaprod.vtexassets.com/arquivos/ids/306992/Mayonesa-Natura-250-Ml_1.jpg?v=638599324442400000",
     "prices": 200,
-    "category": 1
+    "category": 1,
 }
 
 ### Actualizar un Producto
@@ -30,9 +30,10 @@ Content-Type: application/json
     "desc": "Mayonesa Natura 550ml es una mayonesa de calidad superior, elaborada con ingredientes naturales y sin conservantes. Es ideal para acompañar tus comidas y darles un toque especial.",
     "name": "Mayonesa Natura",
     "img": "https://ardiaprod.vtexassets.com/arquivos/ids/306992/Mayonesa-Natura-250-Ml_1.jpg?v=638599324442400000",
+    "status": "active",
     "prices": 200,
     "discount": 1,
-    "category": 1
+    "category": 1,
 }
 
 ### Actualizar un Producto (PATCH)
@@ -50,3 +51,6 @@ Content-Type: application/json
 
 ### Eliminar un Producto
 DELETE http://localhost:3000/api/products/2
+
+### Baja logica de un Producto
+PATCH http://localhost:3000/api/products/1
